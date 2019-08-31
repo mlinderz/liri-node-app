@@ -38,7 +38,7 @@ function findMovie(movie){
 }
 
 function findSong(song){
-    axios.get("http://www.omdbapi.com/?t=" + movie + "&apikey=trilogy")
+    axios.get("http://www.omdbapi.com/?t=" + song + "&apikey=trilogy")
     .then(function(response){
         // console.log(response)
         console.log(response.data.Title)
