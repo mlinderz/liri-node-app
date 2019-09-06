@@ -1,9 +1,14 @@
-js
 require("dotenv").config();
 
 const axios = require('axios');
 var action = process.argv[2]
 var query = process.argv[3]
+var keys = require("./keys.js");
+var Spotify = require('node-spotify-api');
+var spotify = new Spotify(keys.spotify);
+
+
+
 
 function findConcerts(artist){
     axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp")
@@ -21,6 +26,7 @@ function findConcerts(artist){
             }
         })
 }
+
 function findMovie(movie){
     axios.get("http://www.omdbapi.com/?t=" + movie + "&apikey=trilogy")
     .then(function(response){
@@ -38,19 +44,20 @@ function findMovie(movie){
 }
 
 function findSong(song){
-    axios.get("http://www.omdbapi.com/?t=" + song + "&apikey=trilogy")
-    .then(function(response){
-        // console.log(response)
-        console.log(response.data.Title)
-        console.log(response.data.Year)
-        console.log(response.data.Rated)
-        console.log(response.data.Ratings[1].Value)
-        console.log(response.data.Country)
-        console.log(response.data.Language)
-        console.log(response.data.Plot)
-        console.log(response.data.Actors)
+    if (!song){
+        song = "The Sign by Ace of Base"
+    }
+    spotify.search({ type: 'track', query: song }, function(err, data) {
+        if (err) {
+          return console.log('Error occurred: ' + err);
+        }
+       
+      console.log(data.tracks.items[0].artists[0].name); 
+      console.log(data.tracks.items[0].name); 
+      console.log(data.tracks.items[0].album.external_urls.spotify); 
+      console.log(data.tracks.items[0].album.name); 
 
-    })
+      });
 }
 
 switch(action){
@@ -60,7 +67,7 @@ switch(action){
     case "movie-this":
     findMovie(query)
     break
-    case "spotify-this-song"
+    case "spotify-this-song":
     findSong(query)
 }
 
